@@ -1,62 +1,33 @@
+var user_name  = "river_city_retro";
+var auth_token = "UCIrvine-fe67-4b99-a5ed-2f65fd8b6eed";
+var realUrl = "http://svcs.ebay.com/services/search/FindingService/v1?callback=?&OPERATION-NAME=findItemsAdvanced&SECURITY-APPNAME=" + auth_token + "&RESPONSE-DATA-FORMAT=XML&REST-PAYLOAD&itemFilter(0).name=Seller&itemFilter(0).value(0)=seller1&itemFilter(0).value(1)=" + user_name + "&itemFilter(1).name=LocatedIn&itemFilter(1).value=WorldWide&paginationInput.entriesPerPage=50";
 
-// Construct the request for Pat's store contents
-// Replace MyAppID with your Production AppID
-var url = "https://api.ebay.com/wsapi";
-	// url += "?OPERATION-NAME=findItemsByKeywords";
-	// url += "&SERVICE-VERSION=1.0.0";
-	// url += "&SECURITY-APPNAME=******";
-	// url += "&GLOBAL-ID=EBAY-US";
-	// url += "&RESPONSE-DATA-FORMAT=JSON";
-	// // url += "&itemFilter.name=river_city_retro";
-	// // url += "&callback=_cb_findItemsByKeywords";
-	url += "&callback=?";
-	// url += "&REST-PAYLOAD";
-	// url += "&keywords=river_city_retro";
-	// // url += "&keywords=harry%20potter";
-	// // url += "&paginationInput.entriesPerPage=3";
-	// // url += urlfilter;
+$(function() {
+	$.ajax({
+		url: realUrl,
+		dataType: "jsonp",
+		success: function(result) {
+			console.log(result);
 
-var requestString = '<GetSellerListRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>*****</eBayAuthToken></RequesterCredentials><UserID>river_city_retro</UserID><Pagination><EntriesPerPage>200</EntriesPerPage><PageNumber>1</PageNumber></Pagination><OutputSelector>ItemArray.Item.ItemID</OutputSelector><OutputSelector>ItemArray.Item.Quantity</OutputSelector><OutputSelector>ItemArray.Item.Title</OutputSelector><OutputSelector>ItemArray.Item.PrimaryCategory.CategoryID</OutputSelector><OutputSelector>ItemArray.Item.PrimaryCategory.CategoryName</OutputSelector></GetSellerListRequest>';
+			var searchResult = result.findItemsAdvancedResponse[0].searchResult[0];
+			var count = searchResult.count;
 
-//  = '<GetSellerListRequest xmlns="urn:ebay:apis:eBLBaseComponents">
-//   <RequesterCredentials>
-//     <eBayAuthToken>******</eBayAuthToken>
-//   </RequesterCredentials>
-//   <ErrorLanguage>en_US</ErrorLanguage>
-//   <WarningLevel>High</WarningLevel>
-//   <StartTimeFrom>2013-06-01T21:59:59.005Z</StartTimeFrom> 
-//   <StartTimeTo>2013-09-26T21:59:59.005Z</StartTimeTo>
-//   <EndTimeFrom>2013-09-26</EndTimeFrom>
-//   <EndTimeTo>2013-11-26</EndTimeTo>
-//   <GranularityLevel>Coarse</GranularityLevel>
-//   <UserID>river_city_retro</UserID>
-//   <Pagination>
-//     <EntriesPerPage>200</EntriesPerPage>
-//     <PageNumber>1</PageNumber>
-//   </Pagination>
-//   <OutputSelector>ItemArray.Item.ItemID</OutputSelector>
-//   <OutputSelector>ItemArray.Item.Quantity</OutputSelector>
-//   <OutputSelector>ItemArray.Item.Title</OutputSelector>
-//   <OutputSelector>ItemArray.Item.PrimaryCategory.CategoryID</OutputSelector>
-//   <OutputSelector>ItemArray.Item.PrimaryCategory.CategoryName</OutputSelector>
-// </GetSellerListRequest>';
-// var xmlData = jQuery.parseXML(requestString);
+			for(var i = 0 ; i < count; i++) {
+				var item = searchResult.item[i];
+				var title = item.title;
+				var itemUrl = item.viewItemURL;
+				var imgUrl = item.galleryURL;
 
-$().ready(function () {
-	$.ajax({url: url, data: requestString, success: function (rootData) { 
-		console.log(rootData);
-		var items = rootData.findItemsByKeywordsResponse[0].searchResult[0].item || [];
-		for (var i = 0; i < items.length; ++i) {
-			var item     = items[i];
-			var title    = item.title;
-			var pic      = item.galleryURL;
-			var viewitem = item.viewItemURL;
-			if (title != null && viewitem != null) {
-				console.log(pic);
-				console.log(viewitem);
-				console.log(title);
+				$('<div class="item"><img src="' + title + '"><div class="carousel-caption"></div>   </div>').appendTo('.carousel-inner');
+				$('<li data-target="#carousel-example-generic" data-slide-to="'+i+'"></li>').appendTo('.carousel-indicators')
+
 			}
+			$('.item').first().addClass('active');
+			$('.carousel-indicators > li').first().addClass('active');
+			$('#item-carousel').carousel();
+		},
+		error: function(data) {
+			console.log("what the fuck...");
 		}
-		console.log("done");
-	}, dataType: 'xml'});
+	})
 });
