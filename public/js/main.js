@@ -18,12 +18,8 @@ $(function() {
 				var title = item.title;
 				var itemUrl = item.viewItemURL;
 				var imgUrl = item.galleryURL;
-
-				console.log(title);
-
-				$('<div class="item"><img src="' + imgUrl + '"><p>"' + title + '"</p><div class="carousel-caption"></div>   </div>').appendTo('.carousel-inner');
+				$('<div class="item centered"><a href="' + itemUrl + '"><img src="' + imgUrl + '"></a><p>"' + title + '"</p><div class="carousel-caption"></div>   </div>').appendTo('.carousel-inner');
 				// $('<li data-target="#item-carousel" data-slide-to="'+i+'"></li>').appendTo('.carousel-indicators')
-
 			}
 			$('.item').first().addClass('active');
 			$('.carousel-indicators > li').first().addClass('active');
