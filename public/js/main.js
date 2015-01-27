@@ -8,9 +8,10 @@ $(function() {
 		dataType: "jsonp",
 		success: function(result) {
 			console.log(result);
+			console.log(result.findItemsAdvancedResponse[0].searchResult[0]);
 
 			var searchResult = result.findItemsAdvancedResponse[0].searchResult[0];
-			var count = searchResult.count;
+			var count = searchResult.item.length;
 
 			for(var i = 0 ; i < count; i++) {
 				var item = searchResult.item[i];
@@ -18,8 +19,10 @@ $(function() {
 				var itemUrl = item.viewItemURL;
 				var imgUrl = item.galleryURL;
 
-				$('<div class="item"><img src="' + title + '"><div class="carousel-caption"></div>   </div>').appendTo('.carousel-inner');
-				$('<li data-target="#carousel-example-generic" data-slide-to="'+i+'"></li>').appendTo('.carousel-indicators')
+				console.log(title);
+
+				$('<div class="item"><img src="' + imgUrl + '"><p>"' + title + '"</p><div class="carousel-caption"></div>   </div>').appendTo('.carousel-inner');
+				// $('<li data-target="#item-carousel" data-slide-to="'+i+'"></li>').appendTo('.carousel-indicators')
 
 			}
 			$('.item').first().addClass('active');
